@@ -21,6 +21,7 @@ import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiPredicateItem;
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.RuleEntity;
 import com.alibaba.csp.sentinel.slots.block.Rule;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -34,6 +35,7 @@ import java.util.Set;
  */
 public class ApiDefinitionEntity implements RuleEntity {
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
     private String app;
     private String ip;

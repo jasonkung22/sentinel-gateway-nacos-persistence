@@ -20,6 +20,7 @@ import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayParamFlowItem
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.RuleEntity;
 import com.alibaba.csp.sentinel.slots.block.Rule;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -41,6 +42,7 @@ public class GatewayFlowRuleEntity implements RuleEntity {
     /**3-天*/
     public static final int INTERVAL_UNIT_DAY = 3;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
     private String app;
     private String ip;
