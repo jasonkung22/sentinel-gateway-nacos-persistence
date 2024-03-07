@@ -80,13 +80,14 @@ public class NacosConfig {
     public ConfigService nacosConfigService() throws Exception {
         Properties properties = new Properties();
         // nacos 地址
-        properties.put(PropertyKeyConst.SERVER_ADDR, "101.101.101.101:7001");
+        properties.put(PropertyKeyConst.SERVER_ADDR, "192.168.0.7:8848");
         // 命令空间
-        properties.put(PropertyKeyConst.NAMESPACE, "dev");
+        properties.put(PropertyKeyConst.NAMESPACE, "sentinel");
+        // 命令空间
         // nacos 账号
-        properties.put(PropertyKeyConst.USERNAME, "nacos");
+        properties.put(PropertyKeyConst.USERNAME, "iupward");
         // nacos 账号密码
-        properties.put(PropertyKeyConst.PASSWORD, "nacos");
+        properties.put(PropertyKeyConst.PASSWORD, "zylr1HIL*pFZuri*");
         return ConfigFactory.createConfigService(properties);
     }
 }

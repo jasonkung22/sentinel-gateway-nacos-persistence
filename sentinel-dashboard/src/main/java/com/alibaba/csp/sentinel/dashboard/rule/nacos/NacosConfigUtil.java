@@ -21,7 +21,7 @@ package com.alibaba.csp.sentinel.dashboard.rule.nacos;
  */
 public final class NacosConfigUtil {
 
-    public static final String GROUP_ID = "SENTINEL_GROUP";
+    public static final String GROUP_ID = "sentinel_group";
     
     public static final String FLOW_DATA_ID_POSTFIX = "-flow-rules";
 
