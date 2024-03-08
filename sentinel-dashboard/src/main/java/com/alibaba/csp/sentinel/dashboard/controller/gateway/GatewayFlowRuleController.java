@@ -62,12 +62,6 @@ public class GatewayFlowRuleController {
     @Autowired
     private SentinelApiClient sentinelApiClient;
 
-    //添加我们自己写的ruleProvider
-    @Autowired
-    @Qualifier("gateWayFlowRulesNacosProvider")
-    private DynamicRuleProvider<List<GatewayFlowRuleEntity>> ruleProvider;
-
-    //添加我们自己写的 publisher
     @Autowired
     @Qualifier("gateWayFlowRulesNacosPunlisher")
     private DynamicRulePublisher<List<GatewayFlowRuleEntity>> rulePublisher;
@@ -89,9 +83,10 @@ public class GatewayFlowRuleController {
 
         try {
             // List<GatewayFlowRuleEntity> rules = sentinelApiClient.fetchGatewayFlowRules(app, ip, port).get();
-            List<GatewayFlowRuleEntity> rules = ruleProvider.getRules(app);
-
-            repository.saveAll(rules);
+            // List<GatewayFlowRuleEntity> rules = ruleProvider.getRules(app);
+            //
+            // repository.saveAll(rules);
+            List<GatewayFlowRuleEntity> rules = repository.findAllByApp(app);
             return Result.ofSuccess(rules);
         } catch (Throwable throwable) {
             logger.error("query gateway flow rules error:", throwable);

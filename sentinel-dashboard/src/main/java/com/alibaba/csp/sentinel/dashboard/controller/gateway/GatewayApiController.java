@@ -59,12 +59,6 @@ public class GatewayApiController {
     @Autowired
     private SentinelApiClient sentinelApiClient;
 
-
-    //添加我们自己写的ruleProvider
-    @Autowired
-    @Qualifier("getWayApiNacosProvider")
-    private DynamicRuleProvider<List<ApiDefinitionEntity>> ruleProvider;
-
     //添加我们自己写的 publisher
     @Autowired
     @Qualifier("getWayApiNacosPublisher")
@@ -87,9 +81,10 @@ public class GatewayApiController {
 
         try {
             // List<ApiDefinitionEntity> apis = sentinelApiClient.fetchApis(app, ip, port).get();
-            List<ApiDefinitionEntity> apis = ruleProvider.getRules(app);
-
-            repository.saveAll(apis);
+            // List<ApiDefinitionEntity> apis = ruleProvider.getRules(app);
+            //
+            // repository.saveAll(apis);
+            List<ApiDefinitionEntity> apis = repository.findAllByApp(app);
             return Result.ofSuccess(apis);
         } catch (Throwable throwable) {
             logger.error("queryApis error:", throwable);
