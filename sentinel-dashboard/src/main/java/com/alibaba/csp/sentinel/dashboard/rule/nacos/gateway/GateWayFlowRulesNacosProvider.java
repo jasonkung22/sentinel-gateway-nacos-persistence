@@ -1,5 +1,6 @@
 package com.alibaba.csp.sentinel.dashboard.rule.nacos.gateway;
 
+import com.alibaba.csp.sentinel.dashboard.config.NacosConfigProperties;
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.gateway.GatewayFlowRuleEntity;
 import com.alibaba.csp.sentinel.dashboard.rule.DynamicRuleProvider;
 import com.alibaba.csp.sentinel.dashboard.rule.nacos.NacosConfigUtil;
@@ -8,7 +9,7 @@ import com.alibaba.csp.sentinel.util.StringUtil;
 import com.alibaba.nacos.api.config.ConfigService;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,15 +19,17 @@ import org.springframework.stereotype.Component;
 @Component("gateWayFlowRulesNacosProvider")
 public class GateWayFlowRulesNacosProvider implements DynamicRuleProvider<List<GatewayFlowRuleEntity>> {
 
-    @Autowired
+    @Resource
     private ConfigService configService;
-    @Autowired
+    @Resource
     private Converter<String, List<GatewayFlowRuleEntity>> converter;
+    @Resource
+    private NacosConfigProperties nacosConfigProperties;
 
     @Override
     public List<GatewayFlowRuleEntity> getRules(String appName) throws Exception {
-        String rules = configService.getConfig(appName + NacosConfigUtil.GETWAY_FLOW_DATA_ID_POSTFIX,
-                NacosConfigUtil.GROUP_ID, 3000);
+        String rules = configService.getConfig(appName + NacosConfigUtil.GATEWAY_FLOW_DATA_ID_POSTFIX,
+                nacosConfigProperties.getGroup(), 3000);
         if (StringUtil.isEmpty(rules)) {
             return new ArrayList<>();
         }

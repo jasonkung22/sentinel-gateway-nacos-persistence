@@ -15,6 +15,7 @@
  */
 package com.alibaba.csp.sentinel.dashboard.rule.nacos;
 
+import com.alibaba.csp.sentinel.dashboard.config.NacosConfigProperties;
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.gateway.ApiDefinitionEntity;
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.gateway.GatewayFlowRuleEntity;
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.FlowRuleEntity;
@@ -25,6 +26,7 @@ import com.alibaba.nacos.api.config.ConfigFactory;
 import com.alibaba.nacos.api.config.ConfigService;
 import java.util.List;
 import java.util.Properties;
+import javax.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -35,6 +37,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class NacosConfig {
 
+    @Resource
+    private NacosConfigProperties nacosConfigProperties;
+
     @Bean
     public Converter<List<FlowRuleEntity>, String> flowRuleEntityEncoder() {
         return JSON::toJSONString;
@@ -44,10 +49,11 @@ public class NacosConfig {
     public Converter<String, List<FlowRuleEntity>> flowRuleEntityDecoder() {
         return s -> JSON.parseArray(s, FlowRuleEntity.class);
     }
+
     /**
      * 网关API
-     *
      * @return
+     *
      * @throws Exception
      */
     @Bean
@@ -62,8 +68,8 @@ public class NacosConfig {
 
     /**
      * 网关flowRule
-     *
      * @return
+     *
      * @throws Exception
      */
     @Bean
@@ -80,14 +86,14 @@ public class NacosConfig {
     public ConfigService nacosConfigService() throws Exception {
         Properties properties = new Properties();
         // nacos 地址
-        properties.put(PropertyKeyConst.SERVER_ADDR, "192.168.0.7:8848");
+        properties.put(PropertyKeyConst.SERVER_ADDR, nacosConfigProperties.getServerAddress());
         // 命令空间
-        properties.put(PropertyKeyConst.NAMESPACE, "sentinel");
+        properties.put(PropertyKeyConst.NAMESPACE, nacosConfigProperties.getNamespace());
         // 命令空间
         // nacos 账号
-        properties.put(PropertyKeyConst.USERNAME, "iupward");
+        properties.put(PropertyKeyConst.USERNAME, nacosConfigProperties.getUsername());
         // nacos 账号密码
-        properties.put(PropertyKeyConst.PASSWORD, "zylr1HIL*pFZuri*");
+        properties.put(PropertyKeyConst.PASSWORD, nacosConfigProperties.getPassword());
         return ConfigFactory.createConfigService(properties);
     }
 }
