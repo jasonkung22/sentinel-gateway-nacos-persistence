@@ -58,6 +58,7 @@ public class GatewayFlowRuleEntity implements RuleEntity {
     private Double count;
     private Long interval;
     private Integer intervalUnit;
+    private Long intervalSec;
 
     private Integer controlBehavior;
     private Integer burst;
@@ -65,6 +66,25 @@ public class GatewayFlowRuleEntity implements RuleEntity {
     private Integer maxQueueingTimeoutMs;
 
     private GatewayParamFlowItemEntity paramItem;
+
+    public void calIntervalSec() {
+        switch (intervalUnit) {
+            case INTERVAL_UNIT_SECOND:
+                intervalSec = interval;
+                break;
+            case INTERVAL_UNIT_MINUTE:
+                intervalSec = interval * 60;
+                break;
+            case INTERVAL_UNIT_HOUR:
+                intervalSec = interval * 60 * 60;
+                break;
+            case INTERVAL_UNIT_DAY:
+                intervalSec = interval * 60 * 60 * 24;
+                break;
+            default:
+                break;
+        }
+    }
 
     public static Long calIntervalSec(Long interval, Integer intervalUnit) {
         switch (intervalUnit) {
@@ -278,6 +298,14 @@ public class GatewayFlowRuleEntity implements RuleEntity {
 
     public void setIntervalUnit(Integer intervalUnit) {
         this.intervalUnit = intervalUnit;
+    }
+
+    public Long getIntervalSec() {
+        return intervalSec;
+    }
+
+    public void setIntervalSec(Long intervalSec) {
+        this.intervalSec = intervalSec;
     }
 
     public Integer getControlBehavior() {
