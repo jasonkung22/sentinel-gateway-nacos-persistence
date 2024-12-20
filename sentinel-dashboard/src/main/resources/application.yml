@@ -13,7 +13,7 @@ sentinel:
     version: 1.8.7
   nacos:
     config:
-      server-address: 192.168.0.7:8848
+      server-address: 192.168.0.11:8848
       namespace: sentinel
       group: sentinel_group
       username: iupward

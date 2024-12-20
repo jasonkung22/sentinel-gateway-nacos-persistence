@@ -20,7 +20,6 @@ import com.alibaba.csp.sentinel.dashboard.datasource.entity.gateway.ApiDefinitio
 import com.alibaba.csp.sentinel.dashboard.repository.rule.InMemoryRuleRepositoryAdapter;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Store {@link ApiDefinitionEntity} in memory.
@@ -29,7 +28,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @since 1.7.0
  */
 @Component
-public class InMemApiDefinitionStore extends InMemoryRuleRepositoryAdapter<ApiDefinitionEntity> {
+public class InMemGatewayApiDefinitionStore extends InMemoryRuleRepositoryAdapter<ApiDefinitionEntity> {
 
 
     @Override

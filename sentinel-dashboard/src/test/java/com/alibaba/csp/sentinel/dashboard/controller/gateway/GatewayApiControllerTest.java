@@ -25,7 +25,7 @@ import com.alibaba.csp.sentinel.dashboard.domain.Result;
 import com.alibaba.csp.sentinel.dashboard.domain.vo.gateway.api.AddApiReqVo;
 import com.alibaba.csp.sentinel.dashboard.domain.vo.gateway.api.ApiPredicateItemVo;
 import com.alibaba.csp.sentinel.dashboard.domain.vo.gateway.api.UpdateApiReqVo;
-import com.alibaba.csp.sentinel.dashboard.repository.gateway.InMemApiDefinitionStore;
+import com.alibaba.csp.sentinel.dashboard.repository.gateway.InMemGatewayApiDefinitionStore;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
@@ -73,7 +73,7 @@ import static org.mockito.BDDMockito.verify;
  */
 @RunWith(SpringRunner.class)
 @WebMvcTest(GatewayApiController.class)
-@Import({NoAuthConfigurationTest.class, InMemApiDefinitionStore.class, AppManagement.class, SimpleMachineDiscovery.class})
+@Import({NoAuthConfigurationTest.class, InMemGatewayApiDefinitionStore.class, AppManagement.class, SimpleMachineDiscovery.class})
 public class GatewayApiControllerTest {
 
     private static final String TEST_APP = "test_app";
@@ -86,7 +86,7 @@ public class GatewayApiControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private InMemApiDefinitionStore repository;
+    private InMemGatewayApiDefinitionStore repository;
 
     @MockBean
     private SentinelApiClient sentinelApiClient;

@@ -17,7 +17,7 @@ package com.alibaba.csp.sentinel.dashboard.discovery;
 
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.gateway.ApiDefinitionEntity;
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.gateway.GatewayFlowRuleEntity;
-import com.alibaba.csp.sentinel.dashboard.repository.gateway.InMemApiDefinitionStore;
+import com.alibaba.csp.sentinel.dashboard.repository.gateway.InMemGatewayApiDefinitionStore;
 import com.alibaba.csp.sentinel.dashboard.repository.gateway.InMemGatewayFlowRuleStore;
 import com.alibaba.csp.sentinel.dashboard.rule.DynamicRuleProvider;
 import java.util.List;
@@ -56,7 +56,7 @@ public class AppManagement implements MachineDiscovery {
     private DynamicRuleProvider<List<ApiDefinitionEntity>> apiProvider;
 
     @Autowired
-    private InMemApiDefinitionStore apiRepository;
+    private InMemGatewayApiDefinitionStore apiRepository;
 
     private MachineDiscovery machineDiscovery;
 
@@ -117,7 +117,7 @@ public class AppManagement implements MachineDiscovery {
     public void pullGatewayNacosFlowRules(String app) {
         try {
             List<GatewayFlowRuleEntity> rules = flowRuleProvider.getRules(app);
-            flowRuleRepository.saveAll(rules);
+            flowRuleRepository.replaceAll(app, rules);
         } catch (Exception e) {
             logger.error("pull nacos flow rules error, app:{}", app, e);
         }
@@ -126,7 +126,7 @@ public class AppManagement implements MachineDiscovery {
     public void pullGatewayNacosApi(String app) {
         try {
             List<ApiDefinitionEntity> api = apiProvider.getRules(app);
-            apiRepository.saveAll(api);
+            apiRepository.replaceAll(app, api);
         } catch (Exception e) {
             logger.error("pull nacos api error, app:{}", app, e);
         }

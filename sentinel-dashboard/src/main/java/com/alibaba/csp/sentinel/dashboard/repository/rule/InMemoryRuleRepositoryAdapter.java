@@ -29,15 +29,10 @@ import com.alibaba.csp.sentinel.util.AssertUtil;
  */
 public abstract class InMemoryRuleRepositoryAdapter<T extends RuleEntity> implements RuleRepository<T, Long> {
 
-    /**
-     * {@code <machine, <id, rule>>}
-     */
-    private Map<MachineInfo, Map<Long, T>> machineRules = new ConcurrentHashMap<>(16);
-    private Map<Long, T> allRules = new ConcurrentHashMap<>(16);
+    private final Map<Long, T> allRules = new ConcurrentHashMap<>(16);
 
-    private Map<String, Map<Long, T>> appRules = new ConcurrentHashMap<>(16);
+    private final Map<String, Map<Long, T>> appRules = new ConcurrentHashMap<>(16);
 
-    private static final int MAX_RULES_SIZE = 10000;
 
     @Override
     public T save(T entity) {
@@ -47,9 +42,6 @@ public abstract class InMemoryRuleRepositoryAdapter<T extends RuleEntity> implem
         T processedEntity = preProcess(entity);
         if (processedEntity != null) {
             allRules.put(processedEntity.getId(), processedEntity);
-            machineRules.computeIfAbsent(MachineInfo.of(processedEntity.getApp(), processedEntity.getIp(),
-                processedEntity.getPort()), e -> new ConcurrentHashMap<>(32))
-                .put(processedEntity.getId(), processedEntity);
             appRules.computeIfAbsent(processedEntity.getApp(), v -> new ConcurrentHashMap<>(32))
                 .put(processedEntity.getId(), processedEntity);
         }
@@ -57,12 +49,22 @@ public abstract class InMemoryRuleRepositoryAdapter<T extends RuleEntity> implem
         return processedEntity;
     }
 
+    public void replaceAll(String appName, List<T> rules) {
+        synchronized (appName.intern()) {
+            Map<Long, T> ruleMap = appRules.get(appName);
+            if (ruleMap != null) {
+                for (Long ruleId : ruleMap.keySet()) {
+                    allRules.remove(ruleId);
+                }
+                appRules.remove(appName);
+            }
+
+            saveAll(rules);
+        }
+    }
+
     @Override
     public List<T> saveAll(List<T> rules) {
-        // TODO: check here.
-        allRules.clear();
-        machineRules.clear();
-        appRules.clear();
 
         if (rules == null) {
             return null;
@@ -81,7 +83,7 @@ public abstract class InMemoryRuleRepositoryAdapter<T extends RuleEntity> implem
             if (appRules.get(entity.getApp()) != null) {
                 appRules.get(entity.getApp()).remove(id);
             }
-            machineRules.get(MachineInfo.of(entity.getApp(), entity.getIp(), entity.getPort())).remove(id);
+            appRules.get(entity.getApp()).remove(id);
         }
         return entity;
     }
@@ -93,7 +95,7 @@ public abstract class InMemoryRuleRepositoryAdapter<T extends RuleEntity> implem
 
     @Override
     public List<T> findAllByMachine(MachineInfo machineInfo) {
-        Map<Long, T> entities = machineRules.get(machineInfo);
+        Map<Long, T> entities = appRules.get(machineInfo.getApp());
         if (entities == null) {
             return new ArrayList<>();
         }
@@ -112,7 +114,6 @@ public abstract class InMemoryRuleRepositoryAdapter<T extends RuleEntity> implem
 
     public void clearAll() {
         allRules.clear();
-        machineRules.clear();
         appRules.clear();
     }
 
